@@ -1,0 +1,10 @@
+/* Global CSS Reset for Ultra-Premium UI */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
