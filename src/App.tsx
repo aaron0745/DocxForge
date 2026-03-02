@@ -115,6 +115,13 @@ function App() {
   }, [qrCode, url, dotType, cornerType, cornerDotType, dotColor, bgColor, logo]);
 
   const onDownload = async (extension: FileExtension) => {
+    // For SVG, we use the library's native vector download (QR code only)
+    if (extension === 'svg') {
+      qrCode.download({ name: "docxforge-studio-qr", extension });
+      return;
+    }
+
+    // For PNG/JPEG, we use the Composition Engine (QR + Text)
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
@@ -175,8 +182,9 @@ function App() {
     }
 
     const link = document.createElement('a');
-    link.download = `docxforge-qr.${extension}`;
-    link.href = canvas.toDataURL(`image/${extension === 'png' ? 'png' : 'jpeg'}`, 1.0);
+    link.download = `docxforge-studio-qr.${extension}`;
+    const mimeType = extension === 'png' ? 'image/png' : 'image/jpeg';
+    link.href = canvas.toDataURL(mimeType, 1.0);
     link.click();
   };
 
