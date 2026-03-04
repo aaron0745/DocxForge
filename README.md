@@ -2,49 +2,47 @@
 
 **Live Access:** [aaron0745.github.io/DocxForge](https://aaron0745.github.io/DocxForge/)
 
-**DocxForge Studio** is an ultra-premium, professional-grade QR code design suite. Unlike standard generators that produce generic, static codes, DocxForge allows you to transform functional data into high-end brand assets with a sophisticated "Obsidian" workspace interface.
+**DocxForge Studio** is an ultra-premium, professional-grade QR code design suite. It was built to solve a specific, predatory problem in the digital space: the "Free QR" bait-and-switch.
 
-## What is DocxForge Studio?
+## The Origin: A Project of Necessity (and Revenge)
 
-It is a comprehensive design workbench built for creators, developers, and brands who need more than just a basic QR code. It provides a "Design Studio" experience where every element of the QR code—from the microscopic body patterns to the macroscopic anchor frames—is fully customizable.
+DocxForge wasn't built just for design; it was built as a declaration of independence. 
+
+The project started when a creator needed a QR code for an event. After spending time designing a "free" code on a popular generator and distributing posters, a "ransom" email arrived after just 20 scans: *Pay a monthly subscription or we kill your link.*
+
+**DocxForge was built to kill that business model.** 
+
+By handling 100% of the design, processing, and rendering client-side (in your browser), DocxForge ensures that your scannable assets are yours forever. No middlemen, no "scan limits," no subscriptions, and no ransom emails. Just pure, professional design power.
 
 ## Key Features
 
-### 🎨 Advanced Design Engine
-- **Exclusive Patterns:** Go beyond standard squares with **Diamond** and **Star** patterns, plus Rounded, Dots, Classy, Dynamic, and Fluid styles.
-- **Custom Anchors:** Fine-tune your code's "eyes" with Classic, Modern, Soft, and Curved frame styles.
-- **Inner Corner Control:** Independent customization for the internal anchor shapes (Square or Circle).
-- **Creative Frames:** Wrap your code in Pill, Cyber, Ribbon, Brutal, Chat Bubble, or Glassmorphism styles.
+### 🎨 Elite Design Engine
+- **Exclusive Patterns:** Custom-engineered **Diamond**, **Star**, and **Heart** patterns that aren't available in standard libraries.
+- **Advanced Anchors:** Specialized logic for unified **Solid** and **Outline** anchor frames and dots.
+- **Creative Frames:** Professional typography panels including Pill, Cyber, Ribbon, Brutal, and Glassmorphism styles.
+- **Granular Gradients:** Independent linear and radial gradients for the body, background, and individual anchor points.
 
 ### 🖼️ Professional Branding Suite
-- **Logo Integration:** Choose from a curated library of high-quality vector logos (GitHub, LinkedIn, Slack, TikTok, etc.) or upload your own.
-- **Color Modes:** 
-    - **Original:** Display logos in their full brand colors.
-    - **Mono:** Automatically convert any logo (preset or custom) to a sharp, high-contrast **Black & White** version for a minimalist aesthetic.
-- **Smart Filters:** Apply additional effects like Grayscale, Gold, Neon, or Ghost to match your design theme.
+- **Vector Logo Library:** Integrated high-quality logos for major platforms (GitHub, LinkedIn, Slack, TikTok, etc.).
+- **Smart Color Modes:** 
+    - **Original:** Full brand colors.
+    - **Mono:** Intelligent canvas-based conversion to pure high-contrast black for a minimalist, premium look.
+- **Privacy First:** Every design operation happens locally. Your branding and data never touch a server.
 
-### 📱 Responsive & Modern UI
-- **Obsidian Workspace:** A sleek, high-contrast dark theme designed for focus and creativity.
-- **Mobile-First Experience:** A fully optimized layout for phones with a bottom navigation bar and touch-friendly controls.
-- **Interactive Workbench:** Real-time preview with a "pedestal" presentation that elevates your design.
+### 📱 Responsive "Obsidian" Workspace
+- **Modern UI:** A high-contrast dark theme designed for professional focus.
+- **Mobile-First Gestures:** Fully optimized mobile layout with horizontal swipe navigation between tabs.
+- **Sticky Workbench:** Real-time QR preview that stays visible at the top of the viewport on mobile while you design.
 
-### ✍️ Typography & Content
-- **Typography Studio:** Add custom Top and Bottom text labels with granular control over fonts and sizes.
-- **Data Versatility:** Generate codes for URLs, WiFi credentials, vCards, WhatsApp messages, and Calendar events.
-
-### 🚀 High-Performance Export
-- **Print-Ready:** Download ultra-high-resolution files (up to 1000x1000px).
-- **Format Flexibility:** Export as **Transparent PNG**, **Solid JPEG**, or **Vector SVG** for infinite scalability.
-- **Privacy Focused:** 100% client-side rendering. Your data and designs never leave your browser.
+### 🚀 Production-Ready Exports
+- **High Resolution:** Download assets up to 1000x1000px.
+- **Format Support:** Export as **Transparent PNG**, **Solid JPEG**, or **Vector SVG** for print-ready scalability.
 
 ## Tech Stack
 - **Framework:** React 19 + TypeScript
 - **Build Tool:** Vite
-- **Styling:** CSS Modules + Framer Motion (Animations)
-- **Engine:** qr-code-styling + Custom Canvas Processing
+- **Animations:** Framer Motion
+- **Engine:** qr-code-styling + Custom SVG Path Transformation Logic
 
-## Potential Uses
-- **Brand Identity:** Create branded assets for business cards and marketing materials.
-- **Events & Ticketing:** Generate unique, scannable codes for posters and passes.
-- **Product Packaging:** Export SVGs for high-fidelity printing on physical goods.
-- **Digital Art:** Blend functional technology with artistic expression using fluid patterns and gradients.
+## Mission Statement
+DocxForge Studio exists to ensure that functional technology remains an open creative tool, not a subscription-trap. Design it, export it, and own it—permanently.
