@@ -8,7 +8,7 @@
 
 DocxForge wasn't built just for design; it was built as a declaration of independence. 
 
-The project started when a creator needed a QR code for an event. After spending time designing a "free" code on a popular generator and distributing posters, a "ransom" email arrived after just 20 scans: *Pay a monthly subscription or we kill your link.*
+The project started when I needed a QR code for an event. After spending time designing a "free" code on a popular generator and distributing posters, a "ransom" email arrived after just 20 scans: *Pay a monthly subscription or we kill your link.*
 
 **DocxForge was built to kill that business model.** 
 
@@ -46,3 +46,6 @@ By handling 100% of the design, processing, and rendering client-side (in your b
 
 ## Mission Statement
 DocxForge Studio exists to ensure that functional technology remains an open creative tool, not a subscription-trap. Design it, export it, and own it—permanently.
+
+---
+Made by **DOCX**
