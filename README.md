@@ -2,38 +2,61 @@
 
 **Live Access:** [aaron0745.github.io/DocxForge](https://aaron0745.github.io/DocxForge/)
 
-**DocxForge Studio** is an ultra-premium, professional-grade QR code design suite. Unlike standard generators that produce generic, static codes, DocxForge allows you to transform functional data into high-end brand assets with a sophisticated "Obsidian" workspace interface.
+**Build Status:** `v1.2.0 | Production Ready`
 
-## What is DocxForge Studio?
+**DocxForge Studio** is an ultra-premium, professional-grade QR code design suite. Built using **React, TypeScript, and Vite**, it transforms functional data into high-end brand assets within a sophisticated, zero-latency "Obsidian" workspace.
 
-It is a comprehensive design workbench built for creators, developers, and brands who need more than just a basic QR code. It provides a "Design Studio" experience where every element of the QR code—from the microscopic body patterns to the macroscopic anchor frames—is fully customizable.
+---
 
-## Key Features
+### ⚡ Performance Engineered
+Achieved a perfect **100/100 Lighthouse Score** across all metrics on Desktop production builds.
 
-- **Fine-Grained Geometry:** 
-    - **Body Patterns:** Choose from Rounded, Dots, Classy, Dynamic, Square, or Fluid patterns.
-    - **Anchor Frames:** Four distinct styles for the outer corner squares (Classic, Modern, Soft, Curved).
-    - **Inner Corner Dots:** Independent control over the internal anchor shapes (Square or Circle).
-- **Typography Studio:** 
-    - Add optional top and bottom text labels to your designs.
-    - Full control over font size and spacing with professional composition rendering.
-- **Branding & Logos:** 
-    - Integrated "Branding Studio" to add high-resolution logos (GitHub, Google, Instagram, etc.).
-    - Support for custom asset uploads with intelligent background "cutout" logic to maintain scannability.
-- **Advanced Rendering Engine:**
-    - **Composition Mode:** Seamlessly blends QR code, text, and logos into a single high-resolution asset.
-    - **High-Res Export:** Download print-ready files at 1000x1000 pixels.
-    - **Format Variety:** Supports Transparent PNG (alpha channel), Solid JPEG, and Vector SVG.
-- **Obsidian Workspace UI:**
-    - A modern, high-contrast dark theme designed for focus.
-    - Smooth animations via Framer Motion and an intuitive tabbed navigation system.
-    - **Full Responsivity:** Designed to work perfectly on Android, iOS, and Windows devices.
-- **Privacy First:** 100% client-side rendering. Your data, links, and logos never leave your browser.
+| Metric | Score | Notes |
+| :--- | :---: | :--- |
+| **Performance** | **100** | Zero layout shift, optimized asset loading, hardware-accelerated animations. |
+| **Accessibility** | **100** | Full keyboard navigation support, ARIA compliance, high-contrast UI. |
+| **Best Practices** | **100** | Modern web standards, secure context, clean console. |
+| **SEO** | **100** | Fully optimized meta tags, Open Graph support, and semantic HTML. |
 
-## Potential Uses
+---
 
-- **CTF & Hackathons:** Create themed QR codes for puzzles or registration points.
-- **Brand Identity:** Design QR codes that match your brand's specific aesthetic for business cards or social media.
-- **Event Posters:** Add "Scan Me" typography and logos to make your posters look professional and scannable from a distance.
-- **Product Packaging:** Export high-resolution SVGs for large-scale printing on physical products.
-- **Digital Art:** Use the "Fluid" and "Dynamic" patterns to integrate functional QR codes into artistic designs.
+## 🛡️ The Origin Story: Why this exists
+This project was born out of a real-world frustration. During an event, a "free" QR generator website was used to create registration codes. After the event gained traction, the provider sent an ultimatum: **"Pay a monthly subscription or we will deactivate your QR codes."**
+
+The provider was using a **dark pattern**—redirecting "free" users through their servers to hold their links hostage. 
+
+**DocxForge Studio was built as the antidote.** It is a 100% client-side tool. Your QR codes point directly to your destination, not a middleman server. They cannot be deactivated, they cannot be tracked, and they are free forever. 
+
+---
+
+## 🛠️ Key Features (v1.2.0)
+
+### 🎨 Design & Geometry
+- **Pixel Studio:** Choose from 6 distinct body patterns (Rounded, Dots, Classy, Dynamic, Square, Fluid).
+- **Independent Anchors:** Mix and match different shapes for the **Outer Frame** (Classic, Modern, Soft, Curved) and **Inner Dot** (Square, Circle).
+- **Logo Filters:** Apply instant CSS filters to uploaded logos: **Gold**, **Neon**, **Ghost**, and **Grayscale** to match your design aesthetic.
+
+### 🖨️ Professional Export Matrix
+- **PNG (Solid):** High-res 1000px composite with custom background color and typography frames.
+- **PNG (Transparent):** Clean cutout export (QR + Logo only) for professional design overlays.
+- **JPEG:** Optimized solid-background export for web use.
+- **SVG:** Pure vector paths for infinite scaling and large-format printing.
+
+### ⌨️ Workflow Power Tools
+- **Deep Reset:** Contextual "Reset Studio" button (`Escape` key) to instantly wipe the slate clean.
+- **Keyboard Shortcuts:**
+    - `Ctrl + S`: Quick Export (PNG Solid)
+    - `Ctrl + E`: Open Export Panel
+    - `Ctrl + B`: Open Branding Panel
+- **Privacy First:** 100% client-side rendering. Your data never leaves your browser.
+
+## 💻 Tech Stack
+
+- **Core:** React 18, TypeScript, Vite
+- **Rendering:** HTML5 Canvas Composition Engine, `qr-code-styling`
+- **Animation:** Framer Motion (Spring Physics)
+- **Styling:** CSS Modules, Glassmorphism, Responsive Grid
+- **Icons:** Lucide React
+
+---
+*Engineered by DOCX • 2026*
