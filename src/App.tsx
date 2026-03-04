@@ -9,16 +9,15 @@ import QRCodeStyling, {
   type ErrorCorrectionLevel
 } from 'qr-code-styling';
 import { 
-  Upload, Image as ImageIcon, Layout, Sparkles, Link as LinkIcon, Box, Monitor, Fingerprint, DownloadCloud,
-  AlignJustify, ChevronDown, Wifi, Grid, User, MessageCircle, Calendar, RotateCcw
+  Upload, Link as LinkIcon, Box, RotateCcw, ChevronDown, Wifi, User, MessageCircle, Calendar
 } from 'lucide-react';
 import './App.css';
 
-type Tab = 'content' | 'design' | 'corners' | 'branding' | 'labels' | 'export' | 'templates';
-type FrameStyle = 'none' | 'pill' | 'glass' | 'tech' | 'dashed' | 'outline' | 'ribbon' | 'brutal' | 'chat' | 'banner';
-type ContentType = 'url' | 'wifi' | 'email' | 'vcard' | 'whatsapp' | 'event';
-type LogoShape = 'original' | 'circle' | 'square';
-type LogoFilter = 'none' | 'grayscale' | 'gold' | 'neon' | 'ghost';
+import {
+  type Tab, type FrameStyle, type ContentType, type LogoFilter, type EnhancedDotType, type LogoColorMode,
+  PATTERNS, CORNERS, INNER_CORNERS, FONT_GROUPS, FRAME_STYLES, PRESET_LOGOS, TEMPLATES, SVG_PATHS
+} from './constants/appConstants';
+import Layout from './components/Layout';
 
 // Template Preview Component
 const TemplateThumbnail = ({ config }: { config: any }) => {
@@ -30,7 +29,7 @@ const TemplateThumbnail = ({ config }: { config: any }) => {
         const qr = new QRCodeStyling({
           width: 60, height: 60, type: 'svg', data: 'DOCX',
           dotsOptions: { 
-            type: config.dotType, 
+            type: config.dotType as DotType, 
             color: config.useGradient ? undefined : config.dotColor1,
             gradient: config.useGradient ? {
               type: 'linear',
@@ -49,75 +48,26 @@ const TemplateThumbnail = ({ config }: { config: any }) => {
   return <div className="template-qr-container" ref={thumbRef} style={{ background: config.bgColor }} />;
 };
 
-const PATTERNS: { id: DotType; label: string; preview: string }[] = [
-  { id: 'rounded', label: 'Rounded', preview: 'radial-gradient(circle, #fff 40%, transparent 41%)' },
-  { id: 'dots', label: 'Dots', preview: 'radial-gradient(circle, #fff 20%, transparent 21%)' },
-  { id: 'classy', label: 'Classy', preview: 'linear-gradient(45deg, #fff 25%, transparent 25%)' },
-  { id: 'classy-rounded', label: 'Dynamic', preview: 'radial-gradient(ellipse, #fff 50%, transparent 51%)' },
-  { id: 'square', label: 'Square', preview: 'linear-gradient(#fff, #fff)' },
-  { id: 'extra-rounded', label: 'Fluid', preview: 'conic-gradient(#fff 90deg, transparent 90deg)' },
-];
-
-const CORNERS: { id: CornerSquareType; label: string }[] = [
-  { id: 'square', label: 'Classic' },
-  { id: 'dot', label: 'Modern' },
-  { id: 'rounded', label: 'Soft' },
-  { id: 'extra-rounded', label: 'Curved' },
-];
-
-const INNER_CORNERS: { id: CornerDotType; label: string }[] = [
-  { id: 'square', label: 'Square' },
-  { id: 'dot', label: 'Circle' },
-];
-
-const FONT_GROUPS = [
-  { category: 'Sans-Serif', fonts: [{ name: 'Inter', value: "'Inter', sans-serif" }, { name: 'Poppins', value: "'Poppins', sans-serif" }, { name: 'Montserrat', value: "'Montserrat', sans-serif" }, { name: 'Outfit', value: "'Outfit', sans-serif" }, { name: 'Plus Jakarta', value: "'Plus Jakarta Sans', sans-serif" }, { name: 'Roboto', value: "'Roboto', sans-serif" }, { name: 'Open Sans', value: "'Open Sans', sans-serif" }, { name: 'Lato', value: "'Lato', sans-serif" }, { name: 'Ubuntu', value: "'Ubuntu', sans-serif" }, { name: 'Raleway', value: "'Raleway', sans-serif" }] },
-  { category: 'Display & Bold', fonts: [{ name: 'Bebas Neue', value: "'Bebas Neue', cursive" }, { name: 'Anton', value: "'Anton', sans-serif" }, { name: 'Bangers', value: "'Bangers', cursive" }, { name: 'Titan One', value: "'Titan One', cursive" }, { name: 'Righteous', value: "'Righteous', cursive" }, { name: 'Oswald', value: "'Oswald', sans-serif" }, { name: 'Kanit', value: "'Kanit', sans-serif" }] },
-  { category: 'Serif & Elegant', fonts: [{ name: 'Playfair Display', value: "'Playfair Display', serif" }, { name: 'Lora', value: "'Lora', serif" }, { name: 'Merriweather', value: "'Merriweather', serif" }, { name: 'Crimson Text', value: "'Crimson Text', serif" }, { name: 'Abril Fatface', value: "'Abril Fatface', cursive" }] },
-  { category: 'Script & Decorative', fonts: [{ name: 'Great Vibes', value: "'Great Vibes', cursive" }, { name: 'Sacramento', value: "'Sacramento', cursive" }, { name: 'Pacifico', value: "'Pacifico', cursive" }, { name: 'Dancing Script', value: "'Dancing Script', cursive" }, { name: 'Caveat', value: "'Caveat', cursive" }, { name: 'Satisfy', value: "'Satisfy', cursive" }, { name: 'Lobster', value: "'Lobster', cursive" }, { name: 'Yellowtail', value: "'Yellowtail', cursive" }, { name: 'Cookie', value: "'Cookie', cursive" }] },
-  { category: 'Technical & Mono', fonts: [{ name: 'JetBrains Mono', value: "'JetBrains Mono', monospace" }, { name: 'IBM Plex Mono', value: "'IBM Plex Mono', monospace" }, { name: 'Fira Code', value: "'Fira Code', monospace" }, { name: 'Inconsolata', value: "'Inconsolata', monospace" }, { name: 'Source Code Pro', value: "'Source Code Pro', monospace" }, { name: 'Share Tech Mono', value: "'Share Tech Mono', monospace" }, { name: 'Major Mono', value: "'Major Mono Display', monospace" }, { name: 'VT323', value: "'VT323', monospace" }, { name: 'Courier Prime', value: "'Courier Prime', monospace" }] }
-];
-
-const FRAME_STYLES: { id: FrameStyle; label: string }[] = [
-  { id: 'none', label: 'None' }, { id: 'pill', label: 'Pill' }, { id: 'glass', label: 'Glass' }, { id: 'tech', label: 'Cyber' }, { id: 'brutal', label: 'Brutal' }, { id: 'ribbon', label: 'Ribbon' }, { id: 'chat', label: 'Bubble' }, { id: 'banner', label: 'Banner' }, { id: 'dashed', label: 'Dashed' }, { id: 'outline', label: 'Outline' }
-];
-
-const PRESET_LOGOS = [
-  { name: 'None', url: '' },
-  { name: 'GitHub', url: 'https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/github.svg' },
-  { name: 'Google', url: 'https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/google.svg' },
-  { name: 'Instagram', url: 'https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/instagram.svg' },
-  { name: 'X', url: 'https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/x.svg' },
-  { name: 'YouTube', url: 'https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/youtube.svg' }
-];
-
-const TEMPLATES = [
-  { name: 'Neo Matrix', dotType: 'square', cornerType: 'square', cornerDotType: 'square', dotColor1: '#00ff41', bgColor: '#000000', cornerColor: '#00ff41', cornerDotColor: '#00ff41', frameStyle: 'tech', fontFamily: "'JetBrains Mono', monospace" },
-  { name: 'Synthwave', dotType: 'dots', cornerType: 'dot', cornerDotType: 'dot', dotColor1: '#ff00ff', dotColor2: '#38bdf8', useGradient: true, bgColor: '#050505', cornerColor: '#ff00ff', cornerDotColor: '#38bdf8', frameStyle: 'glass', fontFamily: "'Righteous', cursive" },
-  { name: 'Royalty', dotType: 'classy', cornerType: 'extra-rounded', cornerDotType: 'dot', dotColor1: '#d4af37', bgColor: '#1a1a1a', cornerColor: '#d4af37', cornerDotColor: '#d4af37', frameStyle: 'ribbon', fontFamily: "'Playfair Display', serif" },
-  { name: 'Electric Sunset', dotType: 'rounded', cornerType: 'extra-rounded', cornerDotType: 'dot', dotColor1: '#f97316', dotColor2: '#ec4899', useGradient: true, bgColor: '#ffffff', cornerColor: '#f97316', cornerDotColor: '#ec4899', frameStyle: 'banner', fontFamily: "'Anton', sans-serif" },
-  { name: 'Ocean Breeze', dotType: 'rounded', cornerType: 'dot', cornerDotType: 'dot', dotColor1: '#0ea5e9', dotColor2: '#6366f1', useGradient: true, bgColor: '#f0f9ff', cornerColor: '#0ea5e9', cornerDotColor: '#6366f1', frameStyle: 'pill', fontFamily: "'Outfit', sans-serif" },
-  { name: 'Blood Diamond', dotType: 'square', cornerType: 'extra-rounded', cornerDotType: 'square', dotColor1: '#ef4444', bgColor: '#000000', cornerColor: '#ef4444', cornerDotColor: '#ffffff', frameStyle: 'brutal', fontFamily: "'Bebas Neue', cursive" },
-  { name: 'Terminal Pro', dotType: 'square', cornerType: 'square', cornerDotType: 'square', dotColor1: '#22c55e', bgColor: '#0a0a0a', cornerColor: '#22c55e', cornerDotColor: '#22c55e', frameStyle: 'tech', fontFamily: "'VT323', monospace" },
-  { name: 'Paperback', dotType: 'classy', cornerType: 'extra-rounded', cornerDotType: 'dot', dotColor1: '#18181b', bgColor: '#f5f5f4', cornerColor: '#18181b', cornerDotColor: '#18181b', frameStyle: 'outline', fontFamily: "'Lora', serif" },
-  { name: 'Cyber Pink', dotType: 'dots', cornerType: 'extra-rounded', cornerDotType: 'dot', dotColor1: '#f472b6', dotColor2: '#a855f7', useGradient: true, bgColor: '#1e1b4b', cornerColor: '#f472b6', cornerDotColor: '#a855f7', frameStyle: 'glass', fontFamily: "'Righteous', cursive" },
-  { name: 'Gold Marble', dotType: 'classy-rounded', cornerType: 'extra-rounded', cornerDotType: 'dot', dotColor1: '#fbbf24', dotColor2: '#d97706', useGradient: true, bgColor: '#ffffff', cornerColor: '#fbbf24', cornerDotColor: '#d97706', frameStyle: 'banner', fontFamily: "'Playfair Display', serif" }
-];
-
 function App() {
   const [activeTab, setActiveTab] = useState<Tab>('content');
   
   // Design State
-  const [dotType, setDotType] = useState<DotType>('rounded');
-  const [cornerType, setCornerType] = useState<CornerSquareType>('extra-rounded');
-  const [cornerDotType, setCornerDotType] = useState<CornerDotType>('dot');
+  const [dotType, setDotType] = useState<EnhancedDotType>('rounded');
+  const [cornerType, setCornerType] = useState<CornerSquareType | 'hexagon'>('extra-rounded');
+  const [cornerDotType, setCornerDotType] = useState<CornerDotType | 'hexagon'>('dot');
   const [bgColor, setBgColor] = useState('#ffffff');
+  const [bgColor2, setBgColor2] = useState('#ffffff');
+  const [useBgGradient, setUseBgGradient] = useState(false);
   const [dotColor1, setDotColor1] = useState('#050505');
   const [dotColor2, setDotColor2] = useState('#050505');
   const [useGradient, setUseGradient] = useState(false);
   const [gradientType] = useState<'linear' | 'radial'>('linear');
   const [cornerColor, setCornerColor] = useState('#050505');
+  const [cornerColor2, setCornerColor2] = useState('#050505');
+  const [useCornerGradient, setUseCornerGradient] = useState(false);
   const [cornerDotColor, setCornerDotColor] = useState('#050505');
+  const [cornerDotColor2, setCornerDotColor2] = useState('#050505');
+  const [useCornerDotGradient, setUseCornerDotGradient] = useState(false);
   
   // Content State
   const [contentType, setContentType] = useState<ContentType>('url');
@@ -136,8 +86,9 @@ function App() {
   const [logo, setLogo] = useState('');
   const [logoSize, setLogoSize] = useState(0.4);
   const [logoMargin] = useState(5);
-  const [logoShape, setLogoShape] = useState<LogoShape>('original');
   const [logoFilter, setLogoFilter] = useState<LogoFilter>('none');
+  const [logoColorMode, setLogoColorMode] = useState<LogoColorMode>('original');
+  const [processedLogo, setProcessedLogo] = useState('');
   
   // Typography State
   const [topText, setTopText] = useState('');
@@ -160,14 +111,20 @@ function App() {
     return url || 'DocxForge Studio';
   };
 
+  const clearPreset = () => {
+    setDotType('rounded'); setCornerType('extra-rounded'); setCornerDotType('dot');
+    setDotColor1('#050505'); setDotColor2('#050505'); setUseGradient(false);
+    setBgColor('#ffffff'); setBgColor2('#ffffff'); setUseBgGradient(false);
+    setCornerColor('#050505'); setCornerColor2('#050505'); setUseCornerGradient(false);
+    setCornerDotColor('#050505'); setCornerDotColor2('#050505'); setUseCornerDotGradient(false);
+    setFrameStyle('none'); setFontFamily(FONT_GROUPS[0].fonts[0].value);
+  };
+
   const resetAll = () => {
     if (confirm('Reset entire design?')) {
       setLogo(''); setUrl(''); setTopText(''); setBottomText(''); setShowTopText(false); setShowBottomText(false);
-      setDotType('rounded'); setCornerType('extra-rounded'); setCornerDotType('dot');
-      setDotColor1('#050505'); setDotColor2('#050505'); setUseGradient(false);
-      setBgColor('#ffffff'); setCornerColor('#050505'); setCornerDotColor('#050505');
-      setFrameStyle('none'); setFontFamily(FONT_GROUPS[0].fonts[0].value);
-      setLogoFilter('none');
+      setLogoFilter('none'); setLogoColorMode('original');
+      clearPreset();
     }
   };
 
@@ -177,37 +134,211 @@ function App() {
     setCornerDotColor(t.cornerDotColor || t.dotColor1); setFrameStyle(t.frameStyle); setFontFamily(t.fontFamily);
     if (t.useGradient) { setUseGradient(true); setDotColor2(t.dotColor2 || t.dotColor1); }
     else { setUseGradient(false); setDotColor2(t.dotColor1); }
+    
+    if (t.useBgGradient) { setUseBgGradient(true); setBgColor2(t.bgColor2 || t.bgColor); }
+    else { setUseBgGradient(false); setBgColor2(t.bgColor); }
+    
+    if (t.useCornerGradient) { setUseCornerGradient(true); setCornerColor2(t.cornerColor2 || t.cornerColor); }
+    else { setUseCornerGradient(false); setCornerColor2(t.cornerColor); }
   };
 
   const [qrCode] = useState<QRCodeStyling>(new QRCodeStyling({
     width: 300, height: 300, type: 'svg' as DrawType,
     data: getQrData(), image: logo,
-    dotsOptions: { color: dotColor1, type: dotType },
+    dotsOptions: { color: dotColor1, type: dotType as DotType },
     backgroundOptions: { color: 'transparent' },
-    cornersSquareOptions: { color: cornerColor, type: cornerType },
-    cornersDotOptions: { color: cornerDotColor, type: cornerDotType },
+    cornersSquareOptions: { color: cornerColor, type: cornerType as CornerSquareType },
+    cornersDotOptions: { color: cornerDotColor, type: cornerDotType as CornerDotType },
     imageOptions: { crossOrigin: 'anonymous', margin: logoMargin, imageSize: logoSize, hideBackgroundDots: true }
   }));
 
   useEffect(() => { if (qrRef.current) { qrRef.current.innerHTML = ''; qrCode.append(qrRef.current); } }, [qrCode]);
 
   useEffect(() => {
+    if (!logo) {
+      setProcessedLogo('');
+      return;
+    }
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = 512;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        if (logoColorMode === 'bw') {
+          ctx.filter = 'brightness(0)';
+        }
+        const scale = Math.min(size / img.width, size / img.height);
+        const x = (size / 2) - (img.width / 2) * scale;
+        const y = (size / 2) - (img.height / 2) * scale;
+        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+        setProcessedLogo(canvas.toDataURL('image/png'));
+      }
+    };
+    img.src = logo;
+  }, [logo, logoColorMode]);
+
+  useEffect(() => {
+    const isCustom = dotType === 'diamond' || dotType === 'stars' || dotType === 'heart';
+
     const dotsOptions: any = { 
-      type: dotType,
+      type: isCustom ? 'square' : dotType,
       color: useGradient ? undefined : dotColor1,
       gradient: useGradient ? {
         type: gradientType,
         colorStops: [{ offset: 0, color: dotColor1 }, { offset: 1, color: dotColor2 }]
       } : undefined
     };
+    
     qrCode.update({
-      data: getQrData(), image: logo, dotsOptions, backgroundOptions: { color: 'transparent' },
-      cornersSquareOptions: { color: cornerColor, type: cornerType },
-      cornersDotOptions: { color: cornerDotColor, type: cornerDotType },
+      data: getQrData(), 
+      image: processedLogo, 
+      dotsOptions, 
+      backgroundOptions: { 
+        color: useBgGradient ? undefined : 'transparent',
+        gradient: useBgGradient ? {
+          type: 'linear',
+          colorStops: [{ offset: 0, color: bgColor }, { offset: 1, color: bgColor2 }]
+        } : undefined
+      },
+      cornersSquareOptions: { 
+        type: cornerType as CornerSquareType,
+        color: useCornerGradient ? undefined : cornerColor, 
+        gradient: useCornerGradient ? {
+          type: 'linear',
+          colorStops: [{ offset: 0, color: cornerColor }, { offset: 1, color: cornerColor2 }]
+        } : undefined
+      },
+      cornersDotOptions: { 
+        type: cornerDotType as CornerDotType,
+        color: useCornerDotGradient ? undefined : cornerDotColor,
+        gradient: useCornerDotGradient ? {
+          type: 'linear',
+          colorStops: [{ offset: 0, color: cornerDotColor }, { offset: 1, color: cornerDotColor2 }]
+        } : undefined
+      },
       qrOptions: { errorCorrectionLevel: ecc },
       imageOptions: { hideBackgroundDots: !!logo, imageSize: logoSize, margin: logoMargin }
     });
-  }, [qrCode, url, wifiSsid, wifiPass, vcardName, waPhone, waMsg, evName, contentType, dotType, cornerType, cornerDotType, dotColor1, dotColor2, useGradient, gradientType, bgColor, cornerColor, cornerDotColor, logo, logoSize, logoMargin, ecc]);
+
+    const timer = setTimeout(() => {
+      const svg = qrRef.current?.querySelector('svg');
+      if (svg) {
+        const rects = svg.querySelectorAll('rect');
+        rects.forEach(rect => {
+          const w = parseFloat(rect.getAttribute('width') || '0');
+          const h = parseFloat(rect.getAttribute('height') || '0');
+          if (w > 0 && w < 20 && Math.abs(w - h) < 0.1) {
+            const x = parseFloat(rect.getAttribute('x') || '0');
+            const y = parseFloat(rect.getAttribute('y') || '0');
+            if (isCustom) {
+              const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+              const d = `M ${x} ${y} L ${x+w} ${y} L ${x+w} ${y+h} L ${x} ${y+h} Z`;
+              newPath.setAttribute('d', transformPathToCustomShapes(d, dotType));
+              newPath.setAttribute('fill', rect.getAttribute('fill') || dotColor1);
+              rect.parentNode?.replaceChild(newPath, rect);
+            }
+          }
+        });
+
+        const paths = svg.querySelectorAll('path');
+        paths.forEach(path => {
+          const d = path.getAttribute('d') || '';
+          const moveCount = (d.match(/M/g) || []).length;
+          
+          if (isCustom && moveCount > 10) {
+            path.setAttribute('d', transformPathToCustomShapes(d, dotType));
+          }
+        });
+      }
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [qrCode, url, wifiSsid, wifiPass, vcardName, waPhone, waMsg, evName, contentType, dotType, cornerType, cornerDotType, dotColor1, dotColor2, useGradient, gradientType, bgColor, bgColor2, useBgGradient, cornerColor, cornerColor2, useCornerGradient, cornerDotColor, cornerDotColor2, useCornerDotGradient, processedLogo, logoSize, logoMargin, ecc]);
+
+  const applyNormalizedPath = (pathData: string, x: number, y: number, size: number) => {
+    // Correctly handle replace callback arguments: (match, group1, group2, ...)
+    return pathData.replace(/([MLC])\s*([\d.-]+)\s*([\d.-]+)(?:\s*([\d.-]+)\s*([\d.-]+)\s*([\d.-]+)\s*([\d.-]+))?/gi, (_match, command, p1, p2, p3, p4, p5, p6) => {
+      const nx = parseFloat(p1);
+      const ny = parseFloat(p2);
+      const scaledX = (x + nx * size).toFixed(3);
+      const scaledY = (y + ny * size).toFixed(3);
+      
+      if (command.toUpperCase() === 'C') {
+        const nx2 = parseFloat(p3);
+        const ny2 = parseFloat(p4);
+        const nx3 = parseFloat(p5);
+        const ny3 = parseFloat(p6);
+        // Correct order: ControlPoint1X, ControlPoint1Y, ControlPoint2X, ControlPoint2Y, FinalX, FinalY
+        return `C ${(x + nx * size).toFixed(3)} ${(y + ny * size).toFixed(3)} ${(x + nx2 * size).toFixed(3)} ${(y + ny2 * size).toFixed(3)} ${(x + nx3 * size).toFixed(3)} ${(y + ny3 * size).toFixed(3)}`;
+      }
+      
+      return `${command} ${scaledX} ${scaledY}`;
+    });
+  };
+
+  const transformPathToCustomShapes = (d: string, type: string) => {
+    const pathKey = type === 'stars' ? 'star' : type as keyof typeof SVG_PATHS;
+    const shapePath = SVG_PATHS[pathKey];
+    if (!shapePath) return d;
+
+    const chunks = d.match(/[Mm][^Mm]+/g);
+    if (!chunks) return d;
+
+    return chunks.map(chunk => {
+      const points = chunk.match(/[\d.-]+/g)?.map(parseFloat) || [];
+      if (points.length < 2) return chunk;
+
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      let currX = 0, currY = 0;
+
+      const cmds = chunk.match(/([a-df-z])|(-?\d*\.?\d+)/gi) || [];
+      let i = 0;
+      while (i < cmds.length) {
+        const cmd = cmds[i];
+        if (/[a-z]/i.test(cmd)) {
+          i++;
+          if (cmd === 'M' || cmd === 'L') { currX = parseFloat(cmds[i++]); currY = parseFloat(cmds[i++]); }
+          else if (cmd === 'm' || cmd === 'l') { currX += parseFloat(cmds[i++]); currY += parseFloat(cmds[i++]); }
+          else if (cmd === 'H') { currX = parseFloat(cmds[i++]); }
+          else if (cmd === 'h') { currX += parseFloat(cmds[i++]); }
+          else if (cmd === 'V') { currY = parseFloat(cmds[i++]); }
+          else if (cmd === 'v') { currY += parseFloat(cmds[i++]); }
+          else if (cmd === 'Z' || cmd === 'z') { /* close */ }
+          
+          if (!isNaN(currX) && !isNaN(currY)) {
+            minX = Math.min(minX, currX); minY = Math.min(minY, currY);
+            maxX = Math.max(maxX, currX); maxY = Math.max(maxY, currY);
+          }
+        } else { i++; }
+      }
+
+      const size = Math.max(maxX - minX, maxY - minY);
+      if (size > 0 && size < 25) {
+        return applyNormalizedPath(shapePath, minX, minY, size);
+      }
+      return chunk;
+    }).join(' ');
+  };
+
+  const drawFrame = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, style: FrameStyle) => {
+    ctx.save(); ctx.beginPath();
+    const padW = 50; const padH = 20; const fullW = w + padW * 2; const fullH = h + padH * 2;
+    if (style === 'pill') { ctx.roundRect(x - fullW / 2, y - fullH / 2, fullW, fullH, [fullH / 2]); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
+    else if (style === 'brutal') { ctx.fillStyle = dotColor1; ctx.fillRect(x - fullW / 2 + 15, y - fullH / 2 + 15, fullW, fullH); ctx.fillStyle = bgColor; ctx.fillRect(x - fullW / 2, y - fullH / 2, fullW, fullH); ctx.strokeStyle = dotColor1; ctx.lineWidth = 6; ctx.strokeRect(x - fullW / 2, y - fullH / 2, fullW, fullH); ctx.fillStyle = dotColor1; }
+    else if (style === 'tech') { const cut = 20; ctx.moveTo(x - fullW / 2 + cut, y - fullH / 2); ctx.lineTo(x + fullW / 2 - cut, y - fullH / 2); ctx.lineTo(x + fullW / 2, y - fullH / 2 + cut); ctx.lineTo(x + fullW / 2, y + fullH / 2 - cut); ctx.lineTo(x + fullW / 2 - cut, y + fullH / 2); ctx.lineTo(x - fullW / 2 + cut, y + fullH / 2); ctx.lineTo(x - fullW / 2, y + fullH / 2 - cut); ctx.lineTo(x - fullW / 2, y - fullH / 2 + cut); ctx.closePath(); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
+    else if (style === 'ribbon') { const notch = 30; ctx.moveTo(x - fullW / 2, y - fullH / 2); ctx.lineTo(x + fullW / 2, y - fullH / 2); ctx.lineTo(x + fullW / 2 - notch, y); ctx.lineTo(x + fullW / 2, y + fullH / 2); ctx.lineTo(x - fullW / 2, y + fullH / 2); ctx.lineTo(x - fullW / 2 + notch, y); ctx.closePath(); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
+    else if (style === 'banner') { const slant = 40; ctx.moveTo(x - fullW / 2 - slant, y - fullH / 2); ctx.lineTo(x + fullW / 2 + slant, y - fullH / 2); ctx.lineTo(x + fullW / 2, y + fullH / 2); ctx.lineTo(x - fullW / 2, y + fullH / 2); ctx.closePath(); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
+    else if (style === 'chat') { ctx.roundRect(x - fullW / 2, y - fullH / 2, fullW, fullH, [15]); ctx.moveTo(x - 15, y + fullH / 2); ctx.lineTo(x, y + fullH / 2 + 20); ctx.lineTo(x + 15, y + fullH / 2); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
+    else if (style === 'glass') { ctx.roundRect(x - fullW / 2, y - fullH / 2, fullW, fullH, [15]); ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fill(); ctx.strokeStyle = dotColor1; ctx.lineWidth = 4; ctx.stroke(); ctx.fillStyle = dotColor1; }
+    else if (style === 'outline') { ctx.strokeStyle = dotColor1; ctx.lineWidth = 4; ctx.strokeRect(x - fullW / 2, y - fullH / 2, fullW, fullH); ctx.fillStyle = dotColor1; }
+    else if (style === 'dashed') { ctx.setLineDash([15, 10]); ctx.strokeStyle = dotColor1; ctx.lineWidth = 4; ctx.strokeRect(x - fullW / 2, y - fullH / 2, fullW, fullH); ctx.fillStyle = dotColor1; }
+    else { ctx.fillStyle = dotColor1; }
+    ctx.restore();
+  };
 
   const onDownload = async (extension: FileExtension, withBg: boolean) => {
     if (extension === 'svg') {
@@ -216,52 +347,45 @@ function App() {
     }
 
     const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); if (!ctx) return;
-    const qrSize = 1000; const padding = withBg ? 200 : 50; const textSpace = 250;
-    let canvasHeight = qrSize + padding * 2; if (withBg) { if (showTopText) canvasHeight += textSpace; if (showBottomText) canvasHeight += textSpace; }
-    canvas.width = qrSize + padding * 2; canvas.height = canvasHeight;
-    if (withBg) { ctx.fillStyle = bgColor; ctx.fillRect(0, 0, canvas.width, canvas.height); } else { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+    const qrSize = 1000;
+    const padding = withBg ? 200 : 50;
+    const textSpace = 250;
+    
+    let canvasHeight = qrSize + padding * 2;
+    if (withBg) {
+      if (showTopText) canvasHeight += textSpace;
+      if (showBottomText) canvasHeight += textSpace;
+    }
+    
+    canvas.width = qrSize + padding * 2;
+    canvas.height = canvasHeight;
+    
+    if (withBg) {
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
     const dotsOptions: any = { type: dotType, color: useGradient ? undefined : dotColor1, gradient: useGradient ? { type: gradientType, colorStops: [{ offset: 0, color: dotColor1 }, { offset: 1, color: dotColor2 }] } : undefined };
-    const rawQr = new QRCodeStyling({ width: qrSize, height: qrSize, type: 'canvas', data: getQrData(), image: logo, dotsOptions, backgroundOptions: { color: 'transparent' }, cornersSquareOptions: { color: cornerColor, type: cornerType }, cornersDotOptions: { color: cornerDotColor, type: cornerDotType }, imageOptions: { crossOrigin: 'anonymous', margin: logoMargin, imageSize: logoSize, hideBackgroundDots: true }, qrOptions: { errorCorrectionLevel: ecc } });
+    const rawQr = new QRCodeStyling({ width: qrSize, height: qrSize, type: 'canvas', data: getQrData(), image: logo, dotsOptions, backgroundOptions: { color: 'transparent' }, cornersSquareOptions: { color: cornerColor, type: cornerType as CornerSquareType }, cornersDotOptions: { color: cornerDotColor, type: cornerDotType as CornerDotType }, imageOptions: { crossOrigin: 'anonymous', margin: logoMargin, imageSize: logoSize, hideBackgroundDots: true }, qrOptions: { errorCorrectionLevel: ecc } });
     const qrBlob = await rawQr.getRawData('png'); if (!qrBlob) return;
     const qrImg = new Image(); qrImg.src = URL.createObjectURL(qrBlob); await new Promise((res) => { qrImg.onload = res; });
-    const qrY = padding + (withBg && showTopText ? textSpace : 0); ctx.drawImage(qrImg, padding, qrY, qrSize, qrSize);
+    
+    const qrY = padding + (withBg && showTopText ? textSpace : 0);
+    ctx.drawImage(qrImg, padding, qrY, qrSize, qrSize);
+    
     if (withBg) {
       ctx.font = `bold ${effectiveFontSize * 3}px ${fontFamily}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      const drawFrame = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, style: FrameStyle) => {
-        ctx.save(); ctx.beginPath();
-        const padW = 50; const padH = 20; const fullW = w + padW * 2; const fullH = h + padH * 2;
-        if (style === 'pill') { ctx.roundRect(x - fullW / 2, y - fullH / 2, fullW, fullH, [fullH / 2]); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
-        else if (style === 'brutal') { ctx.fillStyle = dotColor1; ctx.fillRect(x - fullW / 2 + 15, y - fullH / 2 + 15, fullW, fullH); ctx.fillStyle = bgColor; ctx.fillRect(x - fullW / 2, y - fullH / 2, fullW, fullH); ctx.strokeStyle = dotColor1; ctx.lineWidth = 6; ctx.strokeRect(x - fullW / 2, y - fullH / 2, fullW, fullH); ctx.fillStyle = dotColor1; }
-        else if (style === 'tech') { const cut = 20; ctx.moveTo(x - fullW / 2 + cut, y - fullH / 2); ctx.lineTo(x + fullW / 2 - cut, y - fullH / 2); ctx.lineTo(x + fullW / 2, y - fullH / 2 + cut); ctx.lineTo(x + fullW / 2, y + fullH / 2 - cut); ctx.lineTo(x + fullW / 2 - cut, y + fullH / 2); ctx.lineTo(x - fullW / 2 + cut, y + fullH / 2); ctx.lineTo(x - fullW / 2, y + fullH / 2 - cut); ctx.lineTo(x - fullW / 2, y - fullH / 2 + cut); ctx.closePath(); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
-        else if (style === 'ribbon') { const notch = 30; ctx.moveTo(x - fullW / 2, y - fullH / 2); ctx.lineTo(x + fullW / 2, y - fullH / 2); ctx.lineTo(x + fullW / 2 - notch, y); ctx.lineTo(x + fullW / 2, y + fullH / 2); ctx.lineTo(x - fullW / 2, y + fullH / 2); ctx.lineTo(x - fullW / 2 + notch, y); ctx.closePath(); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
-        else if (style === 'banner') { const slant = 40; ctx.moveTo(x - fullW / 2 - slant, y - fullH / 2); ctx.lineTo(x + fullW / 2 + slant, y - fullH / 2); ctx.lineTo(x + fullW / 2, y + fullH / 2); ctx.lineTo(x - fullW / 2, y + fullH / 2); ctx.closePath(); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
-        else if (style === 'chat') { ctx.roundRect(x - fullW / 2, y - fullH / 2, fullW, fullH, [15]); ctx.moveTo(x - 15, y + fullH / 2); ctx.lineTo(x, y + fullH / 2 + 20); ctx.lineTo(x + 15, y + fullH / 2); ctx.fillStyle = dotColor1; ctx.fill(); ctx.fillStyle = bgColor; }
-        else if (style === 'glass') { ctx.roundRect(x - fullW / 2, y - fullH / 2, fullW, fullH, [15]); ctx.fillStyle = 'rgba(255,255,255,0.15)'; ctx.fill(); ctx.strokeStyle = dotColor1; ctx.lineWidth = 4; ctx.stroke(); ctx.fillStyle = dotColor1; }
-        else if (style === 'outline') { ctx.strokeStyle = dotColor1; ctx.lineWidth = 4; ctx.strokeRect(x - fullW / 2, y - fullH / 2, fullW, fullH); ctx.fillStyle = dotColor1; }
-        else if (style === 'dashed') { ctx.setLineDash([15, 10]); ctx.strokeStyle = dotColor1; ctx.lineWidth = 4; ctx.strokeRect(x - fullW / 2, y - fullH / 2, fullW, fullH); ctx.fillStyle = dotColor1; }
-        else { ctx.fillStyle = dotColor1; }
-        ctx.restore();
-      };
       if (showTopText && topText) { const m = ctx.measureText(topText.toUpperCase()); drawFrame(ctx, canvas.width / 2, padding + textSpace / 2, m.width, effectiveFontSize * 3, frameStyle); ctx.fillText(topText.toUpperCase(), canvas.width / 2, padding + textSpace / 2); }
       if (showBottomText && bottomText) { const m = ctx.measureText(bottomText.toUpperCase()); drawFrame(ctx, canvas.width / 2, canvas.height - padding - textSpace / 2, m.width, effectiveFontSize * 3, frameStyle); ctx.fillText(bottomText.toUpperCase(), canvas.width / 2, canvas.height - padding - textSpace / 2); }
     }
-    const link = document.createElement('a'); link.download = `docxforge-qr.${extension}`;
-    link.href = canvas.toDataURL(extension === 'png' ? 'image/png' : 'image/jpeg', 1.0); link.click();
-  };
 
-  // Keyboard Shortcuts
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.metaKey || e.ctrlKey) {
-        if (e.key === 's') { e.preventDefault(); onDownload('png', true); }
-        if (e.key === 'e') { e.preventDefault(); setActiveTab('export'); }
-        if (e.key === 'b') { e.preventDefault(); setActiveTab('branding'); }
-      }
-      if (e.key === 'Escape') { e.preventDefault(); resetAll(); }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [dotType, cornerType, dotColor1, dotColor2, useGradient, bgColor, logo, logoFilter, logoShape, logoSize, frameStyle, fontFamily, topText, bottomText, showTopText, showBottomText]);
+    const link = document.createElement('a');
+    link.download = `docxforge-qr.${extension}`;
+    link.href = canvas.toDataURL(extension === 'png' ? 'image/png' : 'image/jpeg', 1.0);
+    link.click();
+  };
 
   const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -277,15 +401,36 @@ function App() {
   const renderPreviewText = (text: string) => {
     const isSolid = ['pill', 'tech', 'ribbon', 'chat', 'banner'].includes(frameStyle);
     const isBrutal = frameStyle === 'brutal';
+    const isGlass = frameStyle === 'glass';
+    
+    const textColor = isSolid ? bgColor : dotColor1;
+
     return (
-      <div className={`cta-frame style-${frameStyle}`} style={{
-        background: isBrutal ? bgColor : (isSolid ? dotColor1 : frameStyle === 'glass' ? 'rgba(255,255,255,0.15)' : 'transparent'),
-        border: ['outline', 'glass', 'brutal'].includes(frameStyle) ? `3px solid ${dotColor1}` : frameStyle === 'dashed' ? `3px dashed ${dotColor1}` : 'none',
-        boxShadow: isBrutal ? `10px 10px 0 ${dotColor1}` : 'none',
-        color: isBrutal ? dotColor1 : (isSolid ? bgColor : dotColor1),
-        fontFamily: fontFamily, fontSize: `clamp(12px, 4vw, ${effectiveFontSize}px)`,
-        padding: '12px 35px', fontWeight: 800, textTransform: 'uppercase'
-      }}>{text}</div>
+      <div 
+        className={`cta-frame style-${frameStyle}`} 
+        style={{
+          background: isBrutal ? bgColor : (isGlass ? 'rgba(255,255,255,0.15)' : (isSolid ? dotColor1 : 'transparent')),
+          border: ['outline', 'glass', 'brutal'].includes(frameStyle) ? `3px solid ${dotColor1}` : (frameStyle === 'dashed' ? `3px dashed ${dotColor1}` : 'none'),
+          boxShadow: isBrutal ? `8px 8px 0 ${dotColor1}` : (isGlass ? '0 8px 32px rgba(0,0,0,0.2)' : 'none'),
+          backdropFilter: isGlass ? 'blur(12px)' : 'none',
+          WebkitBackdropFilter: isGlass ? 'blur(12px)' : 'none',
+          color: isBrutal ? dotColor1 : textColor,
+          fontFamily: fontFamily, 
+          fontSize: `clamp(12px, 4vw, ${effectiveFontSize}px)`,
+          padding: '12px 30px', 
+          fontWeight: 800, 
+          textTransform: 'uppercase',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          zIndex: 10,
+          lineHeight: 1
+        }}
+      >
+        <span style={{ position: 'relative', zIndex: 11 }}>{text}</span>
+      </div>
     );
   };
 
@@ -303,99 +448,95 @@ function App() {
     return <Box size={20} />;
   };
 
-  return (
-    <div className="studio-container">
-      <nav className="studio-nav">
-        <div className="nav-item active"><Fingerprint size={24} /><span>STUDIO</span></div>
-        <div style={{ flex: 1 }} />
-        <div className={`nav-item ${activeTab === 'templates' ? 'active' : ''}`} onClick={() => setActiveTab('templates')}><Grid size={22} /><span>Presets</span></div>
-        <div className={`nav-item ${activeTab === 'content' ? 'active' : ''}`} onClick={() => setActiveTab('content')}><LinkIcon size={22} /><span>Content</span></div>
-        <div className={`nav-item ${activeTab === 'design' ? 'active' : ''}`} onClick={() => setActiveTab('design')}><Sparkles size={22} /><span>Design</span></div>
-        <div className={`nav-item ${activeTab === 'corners' ? 'active' : ''}`} onClick={() => setActiveTab('corners')}><Layout size={22} /><span>Anchors</span></div>
-        <div className={`nav-item ${activeTab === 'branding' ? 'active' : ''}`} onClick={() => setActiveTab('branding')}><ImageIcon size={22} /><span>Branding</span></div>
-        <div className={`nav-item ${activeTab === 'labels' ? 'active' : ''}`} onClick={() => setActiveTab('labels')}><AlignJustify size={22} /><span>Typography</span></div>
-        <div className={`nav-item ${activeTab === 'export' ? 'active' : ''}`} onClick={() => setActiveTab('export')}><DownloadCloud size={22} /><span>Export</span></div>
-        <div style={{ flex: 1 }} />
-      </nav>
+  const getWorkbenchBg = () => {
+    if (useBgGradient) return `linear-gradient(135deg, ${bgColor} 0%, ${bgColor2} 100%)`;
+    return undefined; // Fallback to CSS default
+  };
 
-      <main className="studio-workbench">
-        <div className="brand-badge"><Monitor size={20} color="var(--accent-neon)" /><h1>DOCXFORGE STUDIO</h1></div>
-        <div className="qr-stage">
-          <div className="qr-frame-glow" />
-          <motion.div className="qr-pedestal" layoutId="pedestal" transition={{ type: 'spring', damping: 20 }} style={{ background: bgColor, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem' }}>
-            {showTopText && topText && renderPreviewText(topText)}
-            <div ref={qrRef} className={`filter-${logoFilter}`} style={{ padding: '0.5rem', borderRadius: logoShape === 'circle' ? '50%' : (logoShape === 'square' ? '12px' : '0') }} />
-            {showBottomText && bottomText && renderPreviewText(bottomText)}
-          </motion.div>
+  return (
+    <Layout activeTab={activeTab} setActiveTab={setActiveTab} background={getWorkbenchBg()}>
+      <div className="qr-stage">
+        <div className="qr-frame-glow" />
+        <motion.div 
+          className="qr-pedestal" 
+          layoutId="pedestal" 
+          transition={{ type: 'spring', damping: 20 }} 
+          style={{ 
+            background: bgColor, 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center', 
+            gap: '1.5rem'
+          }}
+        >
+          {showTopText && topText && renderPreviewText(topText)}
+          <div ref={qrRef} className={`filter-${logoFilter} logo-color-mode-${logoColorMode}`} style={{ padding: '0.5rem' }} />
+          {showBottomText && bottomText && renderPreviewText(bottomText)}
+        </motion.div>
+        <div className="reset-container" style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.25rem' }}>
+          <button className="btn-premium btn-ghost" onClick={resetAll} style={{ padding: '0.75rem 1.5rem', background: 'rgba(255,255,255,0.03)' }}>
+            <RotateCcw size={16} /> RESET STUDIO
+          </button>
+          <div className="version-badge">
+            v1.2.5 • PROFESSIONAL EDITION
+          </div>
         </div>
-        <div style={{ marginTop: '2rem' }}><button className="btn-premium btn-ghost" onClick={resetAll} style={{ padding: '0.75rem 1.5rem', background: 'rgba(255,255,255,0.03)' }}><RotateCcw size={16} /> RESET STUDIO</button></div>
-        <div style={{ position: 'absolute', bottom: '2rem', color: 'var(--text-dim)', fontSize: '0.75rem', letterSpacing: '0.1em' }}>ENGINE v1.2.0 • PROFESSIONAL EDITION</div>
-      </main>
+      </div>
 
       <aside className="studio-drawer">
         <AnimatePresence mode="wait">
           {activeTab === 'templates' && (
             <motion.div key="templates" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
               <div className="drawer-header"><h2>Presets</h2><p>Live QR previews.</p></div>
-              <div className="option-grid">{TEMPLATES.map(t => (<div key={t.name} className="studio-option template-card" onClick={() => applyTemplate(t)}><TemplateThumbnail config={t} /><span>{t.name}</span></div>))}</div>
+              <div className="option-grid">
+                <div className="studio-option template-card" onClick={clearPreset} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                  <div className="template-qr-container" style={{ background: '#222', border: '2px dashed #444', height: 60, width: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 0.75rem auto' }}>
+                    <RotateCcw size={20} color="#666" />
+                  </div>
+                  <span style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>NONE</span>
+                </div>
+                {TEMPLATES.map(t => (<div key={t.name} className="studio-option template-card" onClick={() => applyTemplate(t)}><TemplateThumbnail config={t} /><span>{t.name}</span></div>))}
+              </div>
             </motion.div>
           )}
 
           {activeTab === 'branding' && (
             <motion.div key="branding" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <div className="drawer-header"><h2>Branding</h2><p>Logo filters & shapes.</p></div>
+              <div className="drawer-header"><h2>Branding</h2><p>Logo & Styling.</p></div>
               <div className="panel-section">
-                <div className="label-group">Filters</div>
-                <div className="option-grid">
-                  {['none', 'grayscale', 'gold', 'neon', 'ghost'].map(f => (
-                    <button key={f} className={`studio-option ${logoFilter === f ? 'active' : ''}`} onClick={() => setLogoFilter(f as LogoFilter)} style={{ fontSize: '0.65rem', textTransform: 'uppercase' }}>{f}</button>
-                  ))}
-                </div>
-              </div>
-              <div className="panel-section">
-                <div className="label-group">Logo Shape</div>
+                <div className="label-group">Color Mode</div>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  {['original', 'circle', 'square'].map(s => (<button key={s} className={`studio-option ${logoShape === s ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setLogoShape(s as LogoShape)}>{s.toUpperCase()}</button>))}
+                  <button className={`studio-option ${logoColorMode === 'original' ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setLogoColorMode('original')}>COLOR</button>
+                  <button className={`studio-option ${logoColorMode === 'bw' ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setLogoColorMode('bw')}>MONO</button>
                 </div>
               </div>
               <div className="panel-section">
-                <div className="label-group">Logo Gallery</div>
+                <div className="label-group">Quick Logos</div>
                 <div className="logo-studio-grid">
-                  {PRESET_LOGOS.map(p => (
-                    <div key={p.name} className={`logo-studio-item ${logo === p.url ? 'active' : ''}`} onClick={() => setLogo(p.url)}>
-                      {p.url ? <img src={p.url} alt={p.name} /> : <ImageIcon size={18} color="#000" />}
+                  {PRESET_LOGOS.map(l => (
+                    <div key={l.name} className={`logo-studio-item ${logo === l.url ? 'active' : ''} logo-color-mode-${logoColorMode}`} onClick={() => setLogo(l.url)}>
+                      {l.url ? <img src={l.url} alt={l.name} /> : <div style={{ fontSize: '0.6rem', color: '#000', fontWeight: 900 }}>NONE</div>}
                     </div>
                   ))}
                 </div>
               </div>
-              <div className="panel-section"><label className="studio-option upload-studio" style={{ flexDirection: 'row' }}><Upload size={18} /><span>UPLOAD LOGO</span><input type="file" hidden onChange={handleLogoUpload} accept="image/*" /></label></div>
-              <div className="panel-section"><div className="label-group">Logo Size</div><input type="range" min="20" max="50" value={logoSize * 100} onChange={(e) => setLogoSize(parseInt(e.target.value) / 100)} style={{ width: '100%', accentColor: 'var(--accent-neon)' }} /></div>
-            </motion.div>
-          )}
-
-          {activeTab === 'export' && (
-            <motion.div key="export" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <div className="drawer-header"><h2>Export Matrix</h2><p>High-res branded assets.</p></div>
-              <div className="export-stack">
-                <div className="label-group">PNG (Lossless)</div>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button className="btn-premium btn-primary" style={{ flex: 1 }} onClick={() => onDownload('png', true)}>SOLID</button>
-                  <button className="btn-premium btn-ghost" style={{ flex: 1 }} onClick={() => onDownload('png', false)}>TRANS</button>
-                </div>
-                <div className="label-group" style={{ marginTop: '1rem' }}>JPEG (Optimized)</div>
-                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button className="btn-premium btn-ghost" style={{ flex: 1 }} onClick={() => onDownload('jpeg', true)}>SOLID</button>
-                  <button className="btn-premium btn-ghost" style={{ flex: 1 }} onClick={() => onDownload('jpeg', false)}>MINIMAL</button>
-                </div>
-                <div className="label-group" style={{ marginTop: '1rem' }}>Vector</div>
-                <button className="btn-premium btn-ghost" onClick={() => onDownload('svg', false)}>SVG (Standard)</button>
+              <div className="panel-section">
+                <label className="studio-option upload-studio" style={{ flexDirection: 'row', cursor: 'pointer' }}>
+                  <Upload size={18} />
+                  <span>UPLOAD CUSTOM</span>
+                  <input type="file" hidden onChange={handleLogoUpload} accept="image/*" />
+                </label>
+              </div>
+              <div className="panel-section">
+                <div className="label-group">Logo Size</div>
+                <input type="range" min="20" max="50" value={logoSize * 100} onChange={(e) => setLogoSize(parseInt(e.target.value) / 100)} style={{ width: '100%', accentColor: 'var(--accent-neon)' }} />
               </div>
             </motion.div>
           )}
 
           {activeTab === 'content' && (
             <motion.div key="content" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <div className="drawer-header"><h2>Content</h2></div>
+              <div className="drawer-header"><h2>Content</h2><p>QR Data Source.</p></div>
               <div className="panel-section">
                 <div className="option-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
                   <button className={`studio-option ${contentType === 'url' ? 'active' : ''}`} onClick={() => setContentType('url')}><LinkIcon size={14} /> URL</button>
@@ -435,57 +576,94 @@ function App() {
 
           {activeTab === 'design' && (
             <motion.div key="design" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <div className="drawer-header"><h2>Design</h2></div>
+              <div className="drawer-header"><h2>Design</h2><p>Patterns & Canvas.</p></div>
               <div className="panel-section">
                 <div className="label-group">Pattern</div>
-                <div className="option-grid">{PATTERNS.map(p => (<div key={p.id} className={`studio-option ${dotType === p.id ? 'active' : ''}`} onClick={() => setDotType(p.id)}><div style={{ background: p.preview, width: 20, height: 20 }} /><span>{p.label}</span></div>))}</div>
+                <div className="option-grid">
+                  {PATTERNS.map(p => {
+                    const pathKey = p.id === 'stars' ? 'star' : p.id as keyof typeof SVG_PATHS;
+                    const customPath = SVG_PATHS[pathKey];
+                    return (
+                      <div key={p.id} className={`studio-option ${dotType === p.id ? 'active' : ''}`} onClick={() => setDotType(p.id)}>
+                        {customPath ? (
+                          <svg width="20" height="20" viewBox="0 0 1 1">
+                            <path d={customPath} fill="currentColor" />
+                          </svg>
+                        ) : (
+                          <div style={{ background: p.preview, width: 20, height: 20, borderRadius: p.id === 'rounded' ? '50%' : '0' }} />
+                        )}
+                        <span>{p.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
+
               <div className="panel-section">
-                <div className="label-group">Color Profile</div>
+                <div className="label-group">Dot Color</div>
                 <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
                   <button className={`studio-option ${!useGradient ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setUseGradient(false)}>Solid</button>
                   <button className={`studio-option ${useGradient ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setUseGradient(true)}>Gradient</button>
                 </div>
-                <div className="color-row"><span>Start</span><input type="color" className="color-swatch" value={dotColor1} onChange={(e) => setDotColor1(e.target.value)} /></div>
+                <div className="color-row"><span>{useGradient ? 'Start' : 'Color'}</span><input type="color" className="color-swatch" value={dotColor1} onChange={(e) => setDotColor1(e.target.value)} /></div>
                 {useGradient && <div className="color-row" style={{ marginTop: '0.5rem' }}><span>End</span><input type="color" className="color-swatch" value={dotColor2} onChange={(e) => setDotColor2(e.target.value)} /></div>}
               </div>
-              <div className="panel-section"><div className="color-row"><span>BG</span><input type="color" className="color-swatch" value={bgColor} onChange={(e) => setBgColor(e.target.value)} /></div></div>
+
+              <div className="panel-section">
+                <div className="label-group">Background</div>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <button className={`studio-option ${!useBgGradient ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setUseBgGradient(false)}>Solid</button>
+                  <button className={`studio-option ${useBgGradient ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setUseBgGradient(true)}>Gradient</button>
+                </div>
+                <div className="color-row"><span>{useBgGradient ? 'Color 1' : 'BG'}</span><input type="color" className="color-swatch" value={bgColor} onChange={(e) => setBgColor(e.target.value)} /></div>
+                {useBgGradient && <div className="color-row" style={{ marginTop: '0.5rem' }}><span>Color 2</span><input type="color" className="color-swatch" value={bgColor2} onChange={(e) => setBgColor2(e.target.value)} /></div>}
+              </div>
             </motion.div>
           )}
 
           {activeTab === 'corners' && (
             <motion.div key="corners" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <div className="drawer-header"><h2>Anchors</h2></div>
+              <div className="drawer-header"><h2>Anchors</h2><p>Eye Styling.</p></div>
               <div className="panel-section">
                 <div className="label-group">Frame</div>
                 <div className="option-grid">
                   {CORNERS.map(c => (
-                    <div key={c.id} className={`studio-option ${cornerType === c.id ? 'active' : ''}`} onClick={() => setCornerType(c.id)}>
+                    <div key={c.id} className={`studio-option ${cornerType === c.id ? 'active' : ''}`} onClick={() => setCornerType(c.id as any)}>
                       <div style={{ width: 30, height: 30, border: '3px solid white', borderRadius: c.id === 'extra-rounded' ? '10px' : c.id === 'rounded' ? '6px' : c.id === 'dot' ? '50%' : '0' }} />
                       <span style={{ fontSize: '0.65rem', fontWeight: 800 }}>{c.label}</span>
                     </div>
                   ))}
                 </div>
-                <div className="color-row" style={{ marginTop: '0.5rem' }}><span>Frame Color</span><input type="color" className="color-swatch" value={cornerColor} onChange={(e) => setCornerColor(e.target.value)} /></div>
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                  <button className={`studio-option ${!useCornerGradient ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setUseCornerGradient(false)}>Solid</button>
+                  <button className={`studio-option ${useCornerGradient ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setUseCornerGradient(true)}>Gradient</button>
+                </div>
+                <div className="color-row" style={{ marginTop: '0.5rem' }}><span>{useCornerGradient ? 'Start' : 'Frame'}</span><input type="color" className="color-swatch" value={cornerColor} onChange={(e) => setCornerColor(e.target.value)} /></div>
+                {useCornerGradient && <div className="color-row" style={{ marginTop: '0.5rem' }}><span>End</span><input type="color" className="color-swatch" value={cornerColor2} onChange={(e) => setCornerColor2(e.target.value)} /></div>}
               </div>
               <div className="panel-section">
                 <div className="label-group">Inner</div>
                 <div className="option-grid">
                   {INNER_CORNERS.map(ic => (
-                    <div key={ic.id} className={`studio-option ${cornerDotType === ic.id ? 'active' : ''}`} onClick={() => setCornerDotType(ic.id)}>
+                    <div key={ic.id} className={`studio-option ${cornerDotType === ic.id ? 'active' : ''}`} onClick={() => setCornerDotType(ic.id as any)}>
                       <div style={{ width: 16, height: 16, background: 'white', borderRadius: ic.id === 'dot' ? '50%' : '0' }} />
                       <span style={{ fontSize: '0.65rem', fontWeight: 800 }}>{ic.label}</span>
                     </div>
                   ))}
                 </div>
-                <div className="color-row" style={{ marginTop: '0.5rem' }}><span>Dot Color</span><input type="color" className="color-swatch" value={cornerDotColor} onChange={(e) => setCornerDotColor(e.target.value)} /></div>
+                <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1rem' }}>
+                  <button className={`studio-option ${!useCornerDotGradient ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setUseCornerDotGradient(false)}>Solid</button>
+                  <button className={`studio-option ${useCornerDotGradient ? 'active' : ''}`} style={{ flex: 1 }} onClick={() => setUseCornerDotGradient(true)}>Gradient</button>
+                </div>
+                <div className="color-row" style={{ marginTop: '0.5rem' }}><span>{useCornerDotGradient ? 'Start' : 'Dot Color'}</span><input type="color" className="color-swatch" value={cornerDotColor} onChange={(e) => setCornerDotColor(e.target.value)} /></div>
+                {useCornerDotGradient && <div className="color-row" style={{ marginTop: '0.5rem' }}><span>End</span><input type="color" className="color-swatch" value={cornerDotColor2} onChange={(e) => setCornerDotColor2(e.target.value)} /></div>}
               </div>
             </motion.div>
           )}
 
           {activeTab === 'labels' && (
             <motion.div key="labels" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
-              <div className="drawer-header"><h2>Typography</h2></div>
+              <div className="drawer-header"><h2>Typography</h2><p>Branded Text.</p></div>
               <div className="panel-section">
                 <div className="label-group">Enable Panels</div>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -524,7 +702,7 @@ function App() {
                         <AnimatePresence>
                           {openFontGroup === group.category && (
                             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: 'hidden' }}>
-                              <div className="font-grid-container">
+                              <div className="font-grid-container" style={{ padding: '1rem 0' }}>
                                 <div className="option-grid">
                                   {group.fonts.map(f => (
                                     <div key={f.name} className={`studio-option ${fontFamily === f.value ? 'active' : ''}`} style={{ fontFamily: f.value, padding: '0.75rem' }} onClick={() => setFontFamily(f.value)}>
@@ -543,9 +721,26 @@ function App() {
               )}
             </motion.div>
           )}
+
+          {activeTab === 'export' && (
+            <motion.div key="export" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
+              <div className="drawer-header"><h2>Export Matrix</h2><p>High-res branded assets.</p></div>
+              <div className="export-stack">
+                <div className="label-group">PNG (Lossless)</div>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button className="btn-premium btn-primary" style={{ flex: 1 }} onClick={() => onDownload('png', true)}>SOLID</button>
+                  <button className="btn-premium btn-ghost" style={{ flex: 1 }} onClick={() => onDownload('png', false)}>TRANS</button>
+                </div>
+                <div className="label-group" style={{ marginTop: '1rem' }}>JPEG (Optimized)</div>
+                <button className="btn-premium btn-ghost" onClick={() => onDownload('jpeg', true)}>JPEG (Solid BG)</button>
+                <div className="label-group" style={{ marginTop: '1rem' }}>Vector</div>
+                <button className="btn-premium btn-ghost" onClick={() => onDownload('svg', false)}>SVG (Standard)</button>
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </aside>
-    </div>
+    </Layout>
   );
 }
 
