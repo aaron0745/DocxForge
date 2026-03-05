@@ -234,6 +234,12 @@ function App() {
           if (w > 0 && w < 20 && Math.abs(w - h) < 0.1) {
             const x = parseFloat(rect.getAttribute('x') || '0');
             const y = parseFloat(rect.getAttribute('y') || '0');
+            
+            // Spatial Exclusion: Protect anchor zones from transformation
+            // 300x300 canvas, anchors are ~7 modules (~85-90px)
+            const isAnchorZone = (x < 90 && y < 90) || (x > 210 && y < 90) || (x < 90 && y > 210);
+            if (isAnchorZone) return;
+
             if (isCustom) {
               const newPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
               const d = `M ${x} ${y} L ${x+w} ${y} L ${x+w} ${y+h} L ${x} ${y+h} Z`;
@@ -249,7 +255,9 @@ function App() {
           const d = path.getAttribute('d') || '';
           const moveCount = (d.match(/M/g) || []).length;
           
-          if (isCustom && moveCount > 10) {
+          // Only transform the main body path (lots of modules)
+          // and ensure it's actually large enough to be the body, not a corner
+          if (isCustom && moveCount > 100) {
             path.setAttribute('d', transformPathToCustomShapes(d, dotType));
           }
         });
